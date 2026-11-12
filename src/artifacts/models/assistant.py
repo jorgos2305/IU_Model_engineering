@@ -28,3 +28,6 @@ class CancerDetectorAssistant:
             "diagnosis"  : diagnosis,
             "probability_malignant" : probability_malignant
         }
+
+    def train(self) -> None:
+        raise NotImplementedError
