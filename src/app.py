@@ -61,7 +61,7 @@ class CancerDoc:
         # general settings
         st.set_page_config(layout="wide",menu_items={})
         
-        with st.container(border=True):
+        with st.container(border=False):
             st.header("IU Model Engineeing - Tumor diagnosis assistant")
 
         # layout
@@ -72,7 +72,7 @@ class CancerDoc:
         self.build_main_app()
 
     def load_pca_plot(self) -> None:
-        data_location = Path(__file__).parents[0] / "artifacts" / "data" / "baseline_data.csv"
+        data_location = Path(__file__).parents[1] / "data" / "baseline_data.csv"
         df = pd.read_csv(data_location)
         self.pca_plot = plot_PCA(df)
 
@@ -80,9 +80,9 @@ class CancerDoc:
         
         n_columns = 5
         with self.side_container:
-            with st.container(border=True):
+            with st.container(border=False):
                 st.header("Tumor features")
-            self.form = st.form("feature_input", border=True)
+            self.form = st.form("feature_input", border=False)
             with self.form:
                 for i in range(0, len(self.tumor_features), n_columns):
                     cols = st.columns(n_columns)
@@ -103,7 +103,7 @@ class CancerDoc:
     
     def build_main_app(self) -> None:
         with self.main_container:
-            self.diagnosis_container = st.container(border=True)
+            self.diagnosis_container = st.container(border=False)
             with self.diagnosis_container:
                 st.header("Diagnosis")
                 self.diagnosis_display = st.empty()
@@ -113,7 +113,7 @@ class CancerDoc:
                     self.prediction,
                     self.probability_malignant
                 )
-            self.plot_container = st.container(border=True)
+            self.plot_container = st.container(border=False)
             with self.plot_container:
                 self.plot = st.pyplot(self.pca_plot)
     
