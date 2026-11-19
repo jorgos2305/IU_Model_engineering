@@ -1,0 +1,14 @@
+name: modeleng
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - seaborn
+  - scikit-learn
+  - pandas
+  - matplotlib
+  - numpy
+  - jupyter
+  - fastapi
+  - streamlit
+  - mlflow
