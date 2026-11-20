@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime, date
+from typing import Literal
 
 class TumorData(BaseModel):
     """
@@ -44,5 +45,9 @@ class PredictionResponse(BaseModel):
     """
     patient_id            : str
     timestamp             : datetime
-    diagnosis             : str
+    diagnosis             : Literal["B", "M"]
     probability_malignant : float
+
+class VitalSigns(BaseModel):
+    timestamp  : datetime
+    is_healthy : bool
