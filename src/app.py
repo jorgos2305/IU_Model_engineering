@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import pandas as pd
+import random
 from components.plots import PCAprojector, plot_PCA
 from pathlib import Path
 
@@ -109,9 +110,23 @@ class CancerDoc:
                                 continue
                             st.number_input(display_label, key=feature, min_value=0.0, format="%.6f")
 
-                submitted = st.form_submit_button("Predict", key="predict_button")
+                submitted = st.form_submit_button("Predict", key="predict_button", width=120)
                 if submitted:
                     self.diagnose_tumor()
+        st.button("Example", key="example", on_click=self.load_example, width=120)
+
+    def load_example(self):
+        example_location = Path(__file__).parents[1] / "data" / "example.csv"
+        example_df = pd.read_csv(example_location)
+        row_idx = random.randint(0,len(example_df)-1)
+        example_df = example_df.iloc[row_idx, :].to_dict()
+        for feature in self.tumor_features:
+            if feature == "patient_id":
+                st.session_state[feature] = str(example_df["id"])
+            elif feature == "date_diagnosis":
+                continue
+            else:
+                st.session_state[feature] = example_df[feature]
     
     def build_main_app(self) -> None:
         with self.main_container:

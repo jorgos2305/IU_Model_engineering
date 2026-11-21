@@ -42,15 +42,16 @@ def plot_PCA(df_proj:pd.DataFrame, new_data_point:pd.DataFrame=None) -> plt.Figu
         y="Projection axis 2", 
         hue="Diagnosis", 
         palette=palette, 
-        alpha=0.9, 
+        alpha=1, 
         ax=ax)
     # plot the decision of the new observation
     if new_data_point is not None:
         ax.scatter(
             new_data_point["Projection axis 1"],
             new_data_point["Projection axis 2"],
-            color=palette[new_data_point.loc[0,"Diagnosis"]],
+            color="black",
             marker="+",
+            s=100,
             label="New data point"
         )
     # format the axis
