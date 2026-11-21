@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 import pandas as pd
-from components.plots import plot_PCA
+from components.plots import PCAprojector, plot_PCA
 from pathlib import Path
 
 class CancerDoc:
@@ -44,6 +44,9 @@ class CancerDoc:
             "symmetry_worst",
             "fractal_dimension_worst"
             ]
+        # all data points
+        self.pca_projector = None
+        self.df_proj = None
         self.pca_plot = None
 
         # predictions
@@ -67,14 +70,23 @@ class CancerDoc:
         # layout
         self.side_container, self.main_container = st.columns([0.5,0.5], border=False)
 
-        self.build_sidebar()
         self.load_pca_plot()
+        self.build_sidebar()
         self.build_main_app()
 
     def load_pca_plot(self) -> None:
+        # data
         data_location = Path(__file__).parents[1] / "data" / "baseline_data.csv"
         df = pd.read_csv(data_location)
-        self.pca_plot = plot_PCA(df)
+        X = df.drop(["id", "diagnosis"], axis=1)
+        y = df.loc[:, "diagnosis"]
+        # PCA
+        self.pca_projector = PCAprojector(2)
+        self.pca_projector.fit(X)
+        self.df_proj = self.pca_projector.transform(X)
+        self.df_proj["Diagnosis"] = y.values
+        # plot
+        self.pca_plot = plot_PCA(self.df_proj)
 
     def build_sidebar(self):    
         
@@ -171,6 +183,10 @@ class CancerDoc:
             prediction = response.json()
             self.prediction = prediction["diagnosis"]
             self.probability_malignant = prediction["probability_malignant"]
+            new_data_point = pd.DataFrame(tumor_data, index=range(len(tumor_data))).drop(["patient_id", "date_diagnosis"], axis=1)
+            new_data_point = self.pca_projector.transform(new_data_point)
+            new_data_point["Diagnosis"] = self.prediction
+            self.pca_plot = plot_PCA(self.df_proj, new_data_point)
 
 if __name__ == "__main__":
 

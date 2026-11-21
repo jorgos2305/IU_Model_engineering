@@ -14,7 +14,6 @@ class CancerRepository:
             self._validate_connection()
 
     def _initialize_db(self) -> None:
-        print("Creating database...")
         with closing(sqlite3.connect(self._cancer_db)) as con:
             with con:
                 cursor = con.cursor()
@@ -34,14 +33,13 @@ class CancerRepository:
                     )
                     if cursor.fetchone() is None:
                         raise RuntimeError(f"Missing database table: {table}")
-        print("Database already exists")
 
     def insert(self, tumor_data:Dict[str, Any], prediction:Dict[str, Any], model_info:Dict[str, Any]) -> None:
 
-        columns = list(tumor_data.keys())
-        values = list(tumor_data.values())
-        n_cols = 31 * "?," + "?"
-        observation = f"INSERT INTO observation ({",".join(columns)}) VALUES ({n_cols});"
+        columns = ",".join(list(tumor_data.keys()))
+        values = tuple(tumor_data.values())
+        n_cols = (len(values) - 1) * "?," + "?"
+        observation = f"INSERT INTO observation ({columns}) VALUES ({n_cols});"
 
         with closing(sqlite3.connect(self._cancer_db)) as con:
             with con:
