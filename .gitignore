@@ -1,6 +1,7 @@
 .DS_Store
 .ipynb_checkpoints
 .env
+*.db
 __pycache__
 forest.joblib
 mlflow.*

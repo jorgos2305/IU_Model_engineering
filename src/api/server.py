@@ -5,14 +5,19 @@ from typing import Dict, Any
 
 from api.dataschemas import TumorData, PredictionResponse, VitalSigns
 from artifacts.models.assistant import CancerDetectorAssistant
+from artifacts.database.manager import CancerRepository
 
 model = CancerDetectorAssistant()
+db = CancerRepository()
 
 app = FastAPI(title="Tumor diagnosis assistant")
 
 @app.post("/predict")
 def predict(measurement:TumorData) -> PredictionResponse:
-    prediction = model.predict(measurement.model_dump())
+    tumor_data = measurement.model_dump()
+    prediction = model.predict(tumor_data)
+    model_info = model.get_params()
+    db.insert(tumor_data, prediction, model_info)
     return PredictionResponse(**prediction)
 
 @app.get("/model/params")
