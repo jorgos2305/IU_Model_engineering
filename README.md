@@ -65,6 +65,12 @@ Once there, run:
 mlflow server --backend-store-uri sqlite:///mlflow.db --port 5000
 ```
 
+### fastAPI
+In a new terminal windows, navigate to the ```IU_Model_engineering``` folder and run:
+```bash
+fastapi dev src/api/server.py --port 8000
+```
+
 ### Streamlit
 In a new terminal windows, navigate to the ```IU_Model_engineering``` folder and run:
 ```bash
